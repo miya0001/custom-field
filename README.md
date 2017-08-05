@@ -30,15 +30,15 @@ class Text_Field extends \Miya\WP\Custom_Field
 	/**
 	 * Fires at the `admin_enqueue_scripts` hook.
 	 *
-	 * @param none
+	 * @param string $hook The hook like `post.php` or so.
 	 * @return none
 	 */
-	public function admin_enqueue_scripts() {}
+	public function admin_enqueue_scripts( $hook ) {}
 
 	/**
 	 * Fires at the `meta_box_callback` hook.
 	 *
-	 * @param object $post A object of the post.
+	 * @param object $post The object of the post.
 	 * @return none
 	 */
 	public function meta_box_callback( $post )
@@ -53,7 +53,7 @@ class Text_Field extends \Miya\WP\Custom_Field
 	/**
 	 * Fires at the `save_post` hook.
 	 *
-	 * @param int $post_id An ID of the post.
+	 * @param int $post_id The ID of the post.
 	 * @return none
 	 */
 	public function save_post( $post_id )
