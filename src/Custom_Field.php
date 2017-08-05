@@ -5,7 +5,7 @@
  * @package   miya/custom-field
  * @author    Takayuki Miyauchi
  * @license   GPL v2
- * @link      https://github.com/miya0001/gh-auto-updater
+ * @link      https://github.com/miya0001/custom-field
  */
 
 namespace Miya\WP;
@@ -32,10 +32,10 @@ abstract class Custom_Field
 	/**
 	 * Fires at the `admin_enqueue_scripts` hook.
 	 *
-	 * @param none
+	 * @param string $hook The hook like `post.php` or so.
 	 * @return none
 	 */
-	abstract public function admin_enqueue_scripts();
+	abstract public function admin_enqueue_scripts( $hook );
 
 	/**
 	 * The callback function of the `add_meta_box()`.
