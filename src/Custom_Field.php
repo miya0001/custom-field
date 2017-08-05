@@ -12,32 +12,68 @@ namespace Miya\WP;
 
 abstract class Custom_Field
 {
-	protected $ID;
-	protected $label;
+	protected $id;
+	protected $title;
 	protected $post_type;
 
-	public function __construct( $config )
+	/**
+	 * The constructor.
+	 *
+	 * @param string $id An identifier of the metabox.
+	 * @param string $id An identifier of the metabox.
+	 * @return none
+	 */
+	public function __construct( $id, $title )
 	{
-		$this->config = $config;
+		$this->id = $id;
+		$this->title = $title;
 	}
 
+	/**
+	 * Fires at the `admin_enqueue_scripts` hook.
+	 *
+	 * @param none
+	 * @return none
+	 */
 	abstract public function admin_enqueue_scripts();
-	abstract public function save_post( $post_id );
+
+	/**
+	 * The callback function of the `add_meta_box()`.
+	 *
+	 * @param object $post The object of the post.
+	 * @return none
+	 */
 	abstract public function meta_box_callback( $post );
 
+	/**
+	 * Fires at the `save_post` hook.
+	 *
+	 * @param int $post_id The ID of the post.
+	 * @return none
+	 */
+	abstract public function save_post( $post_id );
+
+	/**
+	 * Fires at the `add_meta_boxes` hook.
+	 *
+	 * @param none
+	 * @return none
+	 */
 	public function add_meta_boxes()
 	{
-		if ( empty( $this->config['ID'] ) || empty( $this->config['label'] ) ) {
-			throw new Exception( '`ID` or `label` are not defined.' );
-		}
-
-		add_meta_box( $this->config['ID'],
-			$this->config['label'],
+		add_meta_box( $this->id,
+			$this->title,
 			array( $this, 'meta_box_callback' ),
 			$this->post_type
 		);
 	}
 
+	/**
+	 * Registers the metabox to the edit screen of the `$post_type`.
+	 *
+	 * @param string $post_type The post_type to add metabox.
+	 * @return none
+	 */
 	public function add( $post_type )
 	{
 		$this->post_type = $post_type;

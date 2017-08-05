@@ -6,7 +6,7 @@ class Custom_Field_Tests extends WP_UnitTestCase {
 	 * A single example test.
 	 */
 	function test_class() {
-		$test01 = new Test01( array() );
+		$test01 = new Test01( 'hello', 'Hello' );
 		$test01->add( 'post' );
 		$this->assertSame( 'post', $test01->admin_enqueue_scripts() );
 		$this->assertSame( 'post', $test01->meta_box_callback( array() ) );
@@ -21,11 +21,6 @@ class Custom_Field_Tests extends WP_UnitTestCase {
 
 class Test01 extends \Miya\WP\Custom_Field
 {
-	public function __construct( $config )
-	{
-
-	}
-
 	public function admin_enqueue_scripts()
 	{
 		return $this->post_type;
