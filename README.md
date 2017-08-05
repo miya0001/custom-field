@@ -46,7 +46,7 @@ class Text_Field extends \Miya\WP\Custom_Field
 		?>
 			<?php wp_nonce_field( 'nonce-action', 'nonce-name' ); ?>
 			<input type="text" name="input"
-          value="<?php echo esc_attr( get_post_meta( get_the_ID(), '_input', true ) ); ?>">
+					value="<?php echo esc_attr( get_post_meta( get_the_ID(), '_input', true ) ); ?>">
 		<?php
 	}
 
