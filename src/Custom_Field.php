@@ -15,6 +15,7 @@ abstract class Custom_Field
 	protected $id;
 	protected $title;
 	protected $post_type;
+	protected $options;
 
 	/**
 	 * The constructor.
@@ -23,10 +24,11 @@ abstract class Custom_Field
 	 * @param string $id An identifier of the metabox.
 	 * @return none
 	 */
-	public function __construct( $id, $title )
+	public function __construct( $id, $title, $options = array() )
 	{
 		$this->id = $id;
 		$this->title = $title;
+		$this->options = $options;
 	}
 
 	/**

@@ -1,6 +1,10 @@
 # miya/custom-field
 
 [![Build Status](https://travis-ci.org/miya0001/custom-field.svg?branch=master)](https://travis-ci.org/miya0001/custom-field)
+[![Latest Stable Version](https://poser.pugx.org/miya/custom-field/v/stable)](https://packagist.org/packages/miya/custom-field)
+[![Total Downloads](https://poser.pugx.org/miya/custom-field/downloads)](https://packagist.org/packages/miya/custom-field)
+[![Latest Unstable Version](https://poser.pugx.org/miya/custom-field/v/unstable)](https://packagist.org/packages/miya/custom-field)
+[![License](https://poser.pugx.org/miya/custom-field/license)](https://packagist.org/packages/miya/custom-field)
 
 An abstract class to create a custom field for WordPress.
 
@@ -29,10 +33,7 @@ class Text_Field extends \Miya\WP\Custom_Field
 	 * @param none
 	 * @return none
 	 */
-	public function admin_enqueue_scripts()
-	{
-		wp_enqueue_script( ... );
-	}
+	public function admin_enqueue_scripts() {}
 
 	/**
 	 * Fires at the `meta_box_callback` hook.
@@ -44,7 +45,8 @@ class Text_Field extends \Miya\WP\Custom_Field
 	{
 		?>
 			<?php wp_nonce_field( 'nonce-action', 'nonce-name' ); ?>
-			<input type="text" name="input" ...>
+			<input type="text" name="input"
+          value="<?php echo esc_attr( get_post_meta( get_the_ID(), '_input', true ) ); ?>">
 		<?php
 	}
 
