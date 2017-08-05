@@ -5,7 +5,7 @@
  * @package   miya/custom-field
  * @author    Takayuki Miyauchi
  * @license   GPL v2
- * @link      https://github.com/miya0001/gh-auto-updater
+ * @link      https://github.com/miya0001/custom-field
  */
 
 namespace Miya\WP;
