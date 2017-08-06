@@ -64,3 +64,7 @@ class Text_Field extends \Miya\WP\Custom_Field
 	}
 }
 ```
+
+The result is following.
+
+![](https://www.evernote.com/l/ABXdwD3SniRG87vOmH0juQw6yY5vxS7V7_cB/image.png)
