@@ -27,7 +27,7 @@ $text_field->add( 'post' );
 
 class Text_Field extends \Miya\WP\Custom_Field
 {
-  /**
+	/**
 	 * Fires at the `admin_enqueue_scripts` hook.
 	 *
 	 * @param string $hook The hook like `post.php` or so.
