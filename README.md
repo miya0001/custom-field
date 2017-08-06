@@ -28,7 +28,7 @@ $text_field->add( 'post' );
 class Text_Field extends \Miya\WP\Custom_Field
 {
 	/**
-	 * Displays the form for the metabox. The nonce will be addes automatically.
+	 * Displays the form for the metabox. The nonce will be added automatically.
 	 *
 	 * @param object $post The object of the post.
 	 * @param array $args The argumets passed from `add_meta_box()`.
