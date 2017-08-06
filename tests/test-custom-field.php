@@ -156,6 +156,32 @@ class Custom_Field_Tests extends WP_UnitTestCase
 		$this->assertSame( 'meta_box_callback', $metaboxes['hello']['callback'][1] );
 	}
 
+	/**
+	 * A test `form()` should be called.
+	 */
+	function test_form_should_be_called() {
+		global $wp_meta_boxes;
+
+		$test = new Test( 'hello', 'Hello', array( 'context' => 'side', 'priority' => 'high' ) );
+		$test->add( 'my_custom_post_type' );
+
+		do_action( 'add_meta_boxes' );
+
+		$metaboxes = $wp_meta_boxes['my_custom_post_type']['side']['high'];
+		$this->assertSame( $test, $metaboxes['hello']['callback'][0] );
+		$this->assertSame( 'meta_box_callback', $metaboxes['hello']['callback'][1] );
+
+		$post = $this->factory->post->create( array( 'post_title' => 'Test Post' ) );
+
+		ob_start();
+		call_user_func( array( $metaboxes['hello']['callback'][0], $metaboxes['hello']['callback'][1] ), $post, array() );
+		$res = ob_get_contents();
+		ob_end_clean();
+		$this->assertRegExp( '#<input type="text">#', $res );
+		$nonce = wp_create_nonce( 'hello' );
+		$this->assertRegExp( '#<input type="hidden" id="hello" name="hello" value="'.$nonce.'" />#', $res );
+	}
+
 	protected static function get_property( $name )
 	{
 		$class = new ReflectionClass( 'Test' );
@@ -180,7 +206,7 @@ class Test extends \Miya\WP\Custom_Field
 
 	public function form( $post, $args )
 	{
-
+		echo '<input type="text">';
 	}
 
 	public function save( $post_id )
