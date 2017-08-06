@@ -28,39 +28,29 @@ $text_field->add( 'post' );
 class Text_Field extends \Miya\WP\Custom_Field
 {
 	/**
-	 * Fires at the `admin_enqueue_scripts` hook.
-	 *
-	 * @param string $hook The hook like `post.php` or so.
-	 * @return none
-	 */
-	public function admin_enqueue_scripts( $hook ) {}
-
-	/**
-	 * Fires at the `meta_box_callback` hook.
+	 * Displays the form for the metabox. The nonce will be addes automatically.
 	 *
 	 * @param object $post The object of the post.
+	 * @param array $args The argumets passed from `add_meta_box()`.
 	 * @return none
 	 */
-	public function meta_box_callback( $post )
+	public function form( $post )
 	{
 		?>
-			<?php wp_nonce_field( 'nonce-action', 'nonce-name' ); ?>
 			<input type="text" name="input"
 					value="<?php echo esc_attr( get_post_meta( get_the_ID(), '_input', true ) ); ?>">
 		<?php
 	}
 
 	/**
-	 * Fires at the `save_post` hook.
+	 * Save the metadata from the `form()`. The nonce will be verified automatically.
 	 *
 	 * @param int $post_id The ID of the post.
 	 * @return none
 	 */
-	public function save_post( $post_id )
+	public function save( $post_id )
 	{
-		if ( ! empty( $_POST['input'] ) && wp_verify_nonce( $_POST['nonce-name'], 'nonce-action' ) ) {
-			update_post_meta( $post_id, '_input', $_POST['input'] );
-		}
+		update_post_meta( $post_id, '_input', $_POST['input'] );
 	}
 }
 ```

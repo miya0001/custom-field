@@ -25,7 +25,7 @@ abstract class Custom_Field
 	 * @param string $id The identifier of the metabox.
 	 * @param string $title The title of the metabox.
 	 * @param array $options The additional arguments.
-	 *        It will be passed as the callback arguments of the `add_meta_boxes()` too.
+	 *        It will be passed as the callback arguments of the `add_meta_box()` too.
 	 * @return none
 	 */
 	public function __construct( $id, $title, $options = array() )
@@ -50,15 +50,40 @@ abstract class Custom_Field
 	 * @param string $hook The hook like `post.php` or so.
 	 * @return none
 	 */
-	abstract public function admin_enqueue_scripts( $hook );
+	public function admin_enqueue_scripts( $hook )
+	{
+		// Nothing to do default.
+	}
+
+	/**
+	 * Displays the form for the metabox. The nonce will be addes automatically.
+	 *
+	 * @param object $post The object of the post.
+	 * @param array $args The argumets passed from `add_meta_box()`.
+	 * @return none
+	 */
+	abstract public function form( $post, $args );
+
+	/**
+	 * Save the metadata from the `form()`. The nonce will be verified automatically.
+	 *
+	 * @param int $post_id The ID of the post.
+	 * @return none
+	 */
+	abstract public function save( $post_id );
 
 	/**
 	 * The callback function of the `add_meta_box()`.
 	 *
 	 * @param object $post The object of the post.
+	 * @param array $args The argumets passed from `add_meta_box()`.
 	 * @return none
 	 */
-	abstract public function meta_box_callback( $post );
+	public function meta_box_callback( $post, $args )
+	{
+		wp_nonce_field( $this->id, $this->id );
+		$this->form( $post, $args );
+	}
 
 	/**
 	 * Fires at the `save_post` hook.
@@ -66,7 +91,12 @@ abstract class Custom_Field
 	 * @param int $post_id The ID of the post.
 	 * @return none
 	 */
-	abstract public function save_post( $post_id );
+	public function save_post( $post_id )
+	{
+		if ( ! empty( $_POST[ $this->id ] ) && wp_verify_nonce( $_POST[ $this->id ], $this->id ) ) {
+			$this->save(  $post_id );
+		}
+	}
 
 	/**
 	 * Fires at the `add_meta_boxes` hook.

@@ -9,13 +9,7 @@ class Custom_Field_Tests extends WP_UnitTestCase {
 		$test01 = new Test01( 'hello', 'Hello' );
 		$test01->add( 'post' );
 		$this->assertSame( 'post', $test01->admin_enqueue_scripts( 'hello' ) );
-		$this->assertSame( 'post', $test01->meta_box_callback( array() ) );
-
-		ob_start();
-		do_action( 'save_post', 123 );
-		$res = ob_get_contents();
-		ob_end_flush();
-		$this->assertSame( '123', $res );
+		$this->assertSame( 'post', $test01->form( array(), array() ) );
 	}
 }
 
@@ -26,13 +20,13 @@ class Test01 extends \Miya\WP\Custom_Field
 		return $this->post_type;
 	}
 
-	public function meta_box_callback( $post )
+	public function form( $post, $args )
 	{
 		return $this->post_type;
 	}
 
-	public function save_post( $post_id )
+	public function save( $post_id )
 	{
-		echo $post_id;
+
 	}
 }
