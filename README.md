@@ -27,6 +27,17 @@ $text_field->add( 'post' );
 
 class Text_Field extends \Miya\WP\Custom_Field
 {
+  /**
+	 * Fires at the `admin_enqueue_scripts` hook.
+	 *
+	 * @param string $hook The hook like `post.php` or so.
+	 * @return none
+	 */
+	public function admin_enqueue_scripts( $hook )
+	{
+		// If you need a CCS or JS, you can run `wp_enqueue_*()` here.
+	}
+
 	/**
 	 * Displays the form for the metabox. The nonce will be added automatically.
 	 *
