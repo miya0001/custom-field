@@ -34,7 +34,7 @@ class Text_Field extends \Miya\WP\Custom_Field
 	 * @param array $args The argumets passed from `add_meta_box()`.
 	 * @return none
 	 */
-	public function form( $post )
+	public function form( $post, $args )
 	{
 		?>
 			<input type="text" name="input"
