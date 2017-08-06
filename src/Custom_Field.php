@@ -15,19 +15,32 @@ abstract class Custom_Field
 	protected $id;
 	protected $title;
 	protected $post_type;
+	protected $context = 'advanced';
+	protected $priority = 'default';
 	protected $options;
 
 	/**
 	 * The constructor.
 	 *
-	 * @param string $id An identifier of the metabox.
-	 * @param string $id An identifier of the metabox.
+	 * @param string $id The identifier of the metabox.
+	 * @param string $title The title of the metabox.
+	 * @param array $options The additional arguments.
+	 *        It will be passed as the callback arguments of the `add_meta_boxes()` too.
 	 * @return none
 	 */
 	public function __construct( $id, $title, $options = array() )
 	{
 		$this->id = $id;
 		$this->title = $title;
+
+		if ( ! empty( $options['context'] ) ) {
+			$this->context = $options['context'];
+		}
+
+		if ( ! empty( $options['priority'] ) ) {
+			$this->priority = $options['priority'];
+		}
+
 		$this->options = $options;
 	}
 
@@ -63,10 +76,14 @@ abstract class Custom_Field
 	 */
 	public function add_meta_boxes()
 	{
-		add_meta_box( $this->id,
+		add_meta_box(
+			$this->id,
 			$this->title,
 			array( $this, 'meta_box_callback' ),
-			$this->post_type
+			$this->post_type,
+			$this->context,
+			$this->priority,
+			$this->options
 		);
 	}
 
