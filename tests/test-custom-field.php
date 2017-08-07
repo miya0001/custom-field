@@ -75,22 +75,56 @@ class Custom_Field_Tests extends WP_UnitTestCase
 		$test = new Test( 'hello', 'Hello' );
 		$test->add( 'post' );
 
-		$this->assertSame( 10, has_action( 'admin_enqueue_scripts', array( $test, 'admin_enqueue_scripts' ) ) );
+		$this->assertSame( 10, has_action( 'admin_enqueue_scripts', array( $test, '_admin_enqueue_scripts' ) ) );
 		$this->assertSame( 10, has_action( 'add_meta_boxes', array( $test, 'add_meta_boxes' ) ) );
 		$this->assertSame( 10, has_action( 'save_post', array( $test, 'save_post' ) ) );
 	}
 
 	/**
-	 * A test style and js should be loaded.
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
-	function test_admin_enqueue_scripts()
+	public
+	function test_ccs_and_js_should_be_loaded()
 	{
-		$test = new Test( 'hello', 'Hello' );
-		$test->add( 'post' );
+		$map = new Test( 'map', 'Map' );
+		$map->add( 'post' );
 
-		do_action( 'admin_enqueue_scripts' );
+		convert_to_screen( 'post' );
+		set_current_screen( 'post-new.php' );
+		do_action( 'admin_enqueue_scripts', 'post-new.php' );
 		$this->assertTrue( wp_style_is( 'test-css' ) );
 		$this->assertTrue( wp_script_is( 'test-script' ) );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	function test_test_ccs_and_js_should_be_loaded_on_multiple_post_type() {
+		$map = new Test( 'map', 'Map' );
+		$map->add( array( 'page', 'post' ) );
+
+		convert_to_screen( 'page' );
+		set_current_screen( 'post-new.php' );
+		do_action( 'admin_enqueue_scripts', 'post-new.php' );
+		$this->assertTrue( wp_style_is( 'test-css' ) );
+		$this->assertTrue( wp_script_is( 'test-script' ) );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	function test_test_ccs_and_js_should_not_be_loaded() {
+		$map = new Test( 'map', 'Map' );
+		$map->add( array( 'page' ) );
+
+		convert_to_screen( 'post' );
+		set_current_screen( 'post-new.php' );
+		do_action( 'admin_enqueue_scripts', 'post-new.php' );
+		$this->assertFalse( wp_style_is( 'test-css' ) );
+		$this->assertFalse( wp_script_is( 'test-script' ) );
 	}
 
 	/**
