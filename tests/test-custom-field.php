@@ -88,10 +88,9 @@ class Custom_Field_Tests extends WP_UnitTestCase
 	function test_ccs_and_js_should_be_loaded()
 	{
 		$map = new Test( 'map', 'Map' );
-		$map->add( 'post' );
+		$map->add( 'page' );
 
-		convert_to_screen( 'post' );
-		set_current_screen( 'post-new.php' );
+		$GLOBALS['current_screen'] = convert_to_screen( 'page' );
 		do_action( 'admin_enqueue_scripts', 'post-new.php' );
 		$this->assertTrue( wp_style_is( 'test-css' ) );
 		$this->assertTrue( wp_script_is( 'test-script' ) );
@@ -105,8 +104,7 @@ class Custom_Field_Tests extends WP_UnitTestCase
 		$map = new Test( 'map', 'Map' );
 		$map->add( array( 'page', 'post' ) );
 
-		convert_to_screen( 'page' );
-		set_current_screen( 'post-new.php' );
+		$GLOBALS['current_screen'] = convert_to_screen( 'page' );
 		do_action( 'admin_enqueue_scripts', 'post-new.php' );
 		$this->assertTrue( wp_style_is( 'test-css' ) );
 		$this->assertTrue( wp_script_is( 'test-script' ) );
@@ -118,10 +116,46 @@ class Custom_Field_Tests extends WP_UnitTestCase
 	 */
 	function test_test_ccs_and_js_should_not_be_loaded() {
 		$map = new Test( 'map', 'Map' );
-		$map->add( array( 'page' ) );
+		$map->add( array( 'post' ) );
 
-		convert_to_screen( 'post' );
-		set_current_screen( 'post-new.php' );
+		$GLOBALS['current_screen'] = convert_to_screen( 'page' );
+		do_action( 'admin_enqueue_scripts', 'post-new.php' );
+		$this->assertFalse( wp_style_is( 'test-css' ) );
+		$this->assertFalse( wp_script_is( 'test-script' ) );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	function test_test_ccs_and_js_should_be_loaded_with_cpt() {
+		register_post_type( 'my-post-type' );
+
+		$map = new Test( 'map', 'Map' );
+		$map->add( array( 'my-post-type' ) );
+
+		$GLOBALS['current_screen'] = convert_to_screen( 'my-post-type' );
+		do_action( 'admin_enqueue_scripts', 'post-new.php' );
+		$this->assertTrue( wp_style_is( 'test-css' ) );
+		$this->assertTrue( wp_script_is( 'test-script' ) );
+
+		// $GLOBALS['current_screen'] = convert_to_screen( 'page' );
+		// do_action( 'admin_enqueue_scripts', 'post-new.php' );
+		// $this->assertFalse( wp_style_is( 'test-css' ) );
+		// $this->assertFalse( wp_script_is( 'test-script' ) );
+	}
+
+	/**
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	function test_test_ccs_and_js_should_not_be_loaded_with_cpt() {
+		register_post_type( 'my-post-type' );
+
+		$map = new Test( 'map', 'Map' );
+		$map->add( array( 'my-post-type' ) );
+
+		$GLOBALS['current_screen'] = convert_to_screen( 'post' );
 		do_action( 'admin_enqueue_scripts', 'post-new.php' );
 		$this->assertFalse( wp_style_is( 'test-css' ) );
 		$this->assertFalse( wp_script_is( 'test-script' ) );
