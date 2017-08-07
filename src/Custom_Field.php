@@ -10,23 +10,49 @@
 
 namespace Miya\WP;
 
+/**
+ * An abstract class to register meta box to the edit screen of the WordPress.
+ */
 abstract class Custom_Field
 {
+	/**
+	 * @var string $id The identifier of the meta box.
+	 */
 	protected $id;
+
+	/**
+	 * @var string $title The title of the meta box.
+	 */
 	protected $title;
+
+	/**
+	 * @var mixed $post_type The post_type to add meta box.
+	 */
 	protected $post_type;
+
+	/**
+	 * @var string $context The context within the screen where the boxes should display.
+	 */
 	protected $context = 'advanced';
+
+	/**
+	 * @var string $priority The priority within the context where the boxes should show ('high', 'low').
+	 */
 	protected $priority = 'default';
+
+	/**
+	 * @var array $options The additional arguments.
+	 *        It will be passed as the callback arguments of the `add_meta_box()` too.
+	 */
 	protected $options;
 
 	/**
 	 * The constructor.
 	 *
-	 * @param string $id The identifier of the metabox.
-	 * @param string $title The title of the metabox.
+	 * @param string $id The identifier of the meta box.
+	 * @param string $title The title of the meta box.
 	 * @param array $options The additional arguments.
 	 *        It will be passed as the callback arguments of the `add_meta_box()` too.
-	 * @return none
 	 */
 	public function __construct( $id, $title, $options = array() )
 	{
@@ -48,7 +74,6 @@ abstract class Custom_Field
 	 * Fires at the `admin_enqueue_scripts` hook.
 	 *
 	 * @param string $hook The hook like `post.php` or so.
-	 * @return none
 	 */
 	public function admin_enqueue_scripts( $hook )
 	{
@@ -56,19 +81,17 @@ abstract class Custom_Field
 	}
 
 	/**
-	 * Displays the form for the metabox. The nonce will be added automatically.
+	 * Displays the form for the meta box. The nonce will be added automatically.
 	 *
 	 * @param object $post The object of the post.
-	 * @param array $args The argumets passed from `add_meta_box()`.
-	 * @return none
+	 * @param array $args The arguments passed from `add_meta_box()`.
 	 */
 	abstract public function form( $post, $args );
 
 	/**
-	 * Save the metadata from the `form()`. The nonce will be verified automatically.
+	 * Save the metadatas from the meta box created by `form()`. The nonce will be verified automatically.
 	 *
 	 * @param int $post_id The ID of the post.
-	 * @return none
 	 */
 	abstract public function save( $post_id );
 
@@ -77,7 +100,6 @@ abstract class Custom_Field
 	 *
 	 * @param object $post The object of the post.
 	 * @param array $args The argumets passed from `add_meta_box()`.
-	 * @return none
 	 */
 	public function meta_box_callback( $post, $args )
 	{
@@ -89,7 +111,6 @@ abstract class Custom_Field
 	 * Fires at the `save_post` hook.
 	 *
 	 * @param int $post_id The ID of the post.
-	 * @return none
 	 */
 	public function save_post( $post_id )
 	{
@@ -101,8 +122,6 @@ abstract class Custom_Field
 	/**
 	 * Fires at the `add_meta_boxes` hook.
 	 *
-	 * @param none
-	 * @return none
 	 */
 	public function add_meta_boxes()
 	{
@@ -118,10 +137,9 @@ abstract class Custom_Field
 	}
 
 	/**
-	 * Registers the metabox to the edit screen of the `$post_type`.
+	 * Registers the meta box to the edit screen of the `$post_type`.
 	 *
-	 * @param string $post_type The post_type to add metabox.
-	 * @return none
+	 * @param mixed $post_type The post_type to add meta box.
 	 */
 	public function add( $post_type )
 	{
