@@ -36,6 +36,7 @@ class Text_Field extends \Miya\WP\Custom_Field
 	public function admin_enqueue_scripts( $hook )
 	{
 		// If you need a CCS or JS, you can run `wp_enqueue_*()` here.
+    // This function will be callded when current screen is the specific post type by `add()`.
 	}
 
 	/**

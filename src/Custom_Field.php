@@ -71,7 +71,7 @@ abstract class Custom_Field
 	}
 
 	/**
-	 * Fires at the `admin_enqueue_scripts` hook.
+	 * Run `wp_enqueue_*()` in this function. It will be called from `enqueue_scripts()`.
 	 *
 	 * @param string $hook The hook like `post.php` or so.
 	 */
@@ -137,6 +137,18 @@ abstract class Custom_Field
 	}
 
 	/**
+	 * Fires at the `admin_enqueue_scripts` hook.
+	 *
+	 * @param string $hook The hook like `post.php` or so.
+	 */
+	public function _admin_enqueue_scripts( $hook )
+	{
+		if ( $this->is_the_screen( $hook ) ) {
+			$this->admin_enqueue_scripts( $hook );
+		}
+	}
+
+	/**
 	 * Registers the meta box to the edit screen of the `$post_type`.
 	 *
 	 * @param mixed $post_type The post_type to add meta box.
@@ -145,8 +157,31 @@ abstract class Custom_Field
 	{
 		$this->post_type = $post_type;
 
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, '_admin_enqueue_scripts' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ) );
 		add_action( 'save_post', array( $this, 'save_post' ) );
+	}
+
+	/**
+	 * Registers the meta box to the edit screen of the `$post_type`.
+	 *
+	 * @param string $screen The screen name that is passed to `admin_enqueue_scripts` hook.
+	 */
+	protected function is_the_screen( $screen )
+	{
+		$current_screen = get_current_screen();
+		if ( 'post-new.php' === $screen || 'post.php' === $screen ) {
+			if ( is_array( $this->post_type ) ) {
+				if ( in_array( $current_screen->post_type, $this->post_type, true ) ) {
+					return true;
+				}
+			} else {
+				if ( $this->post_type === $current_screen->post_type ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 }
