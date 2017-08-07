@@ -53,6 +53,18 @@ class Custom_Field_Tests extends WP_UnitTestCase
 		) );
 
 		$this->assertSame( 'priority value', $priority->getValue( $obj ) );
+
+		$priority = self::get_property( 'post_type' );
+		$obj = new Test( '1234', 'Hello World' );
+		$obj->add( 'page' );
+
+		$this->assertSame( 'page', $priority->getValue( $obj ) );
+
+		$priority = self::get_property( 'post_type' );
+		$obj = new Test( '1234', 'Hello World' );
+		$obj->add( array( 'post', 'page' ) );
+
+		$this->assertSame( array( 'post', 'page' ), $priority->getValue( $obj ) );
 	}
 
 	/**
@@ -71,7 +83,8 @@ class Custom_Field_Tests extends WP_UnitTestCase
 	/**
 	 * A test style and js should be loaded.
 	 */
-	function test_admin_enqueue_scripts() {
+	function test_admin_enqueue_scripts()
+	{
 		$test = new Test( 'hello', 'Hello' );
 		$test->add( 'post' );
 
@@ -83,7 +96,8 @@ class Custom_Field_Tests extends WP_UnitTestCase
 	/**
 	 * A test metabox should be added.
 	 */
-	function test_meta_box_should_be_added() {
+	function test_meta_box_should_be_added()
+	{
 		global $wp_meta_boxes;
 
 		$test = new Test( 'hello', 'Hello' );
@@ -102,7 +116,8 @@ class Custom_Field_Tests extends WP_UnitTestCase
 	/**
 	 * A test metabox should be added.
 	 */
-	function test_meta_box_should_be_added_to_cpt() {
+	function test_meta_box_should_be_added_to_cpt()
+	{
 		global $wp_meta_boxes;
 
 		$test = new Test( 'hello', 'Hello' );
@@ -121,7 +136,8 @@ class Custom_Field_Tests extends WP_UnitTestCase
 	/**
 	 * A test metabox should be added.
 	 */
-	function test_meta_box_should_be_added_to_cpt_to_side() {
+	function test_meta_box_should_be_added_to_cpt_to_side()
+	{
 		global $wp_meta_boxes;
 
 		$test = new Test( 'hello', 'Hello', array( 'context' => 'side' ) );
@@ -140,7 +156,8 @@ class Custom_Field_Tests extends WP_UnitTestCase
 	/**
 	 * A test metabox should be added.
 	 */
-	function test_meta_box_should_be_added_to_cpt_to_high_priority() {
+	function test_meta_box_should_be_added_to_cpt_to_high_priority()
+	{
 		global $wp_meta_boxes;
 
 		$test = new Test( 'hello', 'Hello', array( 'context' => 'side', 'priority' => 'high' ) );
@@ -159,7 +176,8 @@ class Custom_Field_Tests extends WP_UnitTestCase
 	/**
 	 * A test `form()` should be called.
 	 */
-	function test_form_should_be_called() {
+	function test_form_should_be_called()
+	{
 		global $wp_meta_boxes;
 
 		$test = new Test( 'hello', 'Hello', array( 'context' => 'side', 'priority' => 'high' ) );
@@ -180,6 +198,18 @@ class Custom_Field_Tests extends WP_UnitTestCase
 		$this->assertRegExp( '#<input type="text">#', $res );
 		$nonce = wp_create_nonce( 'hello' );
 		$this->assertRegExp( '#<input type="hidden" id="hello" name="hello" value="'.$nonce.'" />#', $res );
+	}
+
+	function test_meta_box_should_be_added_to_multiple_cpt() {
+		global $wp_meta_boxes;
+
+		$test = new Test( 'hello', 'Hello', array( 'context' => 'side', 'priority' => 'high' ) );
+		$test->add( array( 'my_custom_post_type1', 'my_custom_post_type2' ) );
+
+		do_action( 'add_meta_boxes' );
+
+		$this->assertArrayHasKey( 'my_custom_post_type1', $wp_meta_boxes );
+		$this->assertArrayHasKey( 'my_custom_post_type2', $wp_meta_boxes );
 	}
 
 	protected static function get_property( $name )
