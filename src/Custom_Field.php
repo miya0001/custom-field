@@ -103,7 +103,7 @@ abstract class Custom_Field
 	 */
 	public function meta_box_callback( $post, $args )
 	{
-		wp_nonce_field( $this->id, $this->id );
+		wp_nonce_field( '_' . $this->id, '_' . $this->id );
 		$this->form( $post, $args );
 	}
 
@@ -114,7 +114,8 @@ abstract class Custom_Field
 	 */
 	public function save_post( $post_id )
 	{
-		if ( ! empty( $_POST[ $this->id ] ) && wp_verify_nonce( $_POST[ $this->id ], $this->id ) ) {
+		$nonce_id = '_' . $this->id;
+		if ( ! empty( $_POST[ $nonce_id ] ) && wp_verify_nonce( $_POST[ $nonce_id ], $nonce_id ) ) {
 			$this->save(  $post_id );
 		}
 	}
