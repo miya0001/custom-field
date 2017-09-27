@@ -264,8 +264,8 @@ class Custom_Field_Tests extends WP_UnitTestCase
 		$res = ob_get_contents();
 		ob_end_clean();
 		$this->assertRegExp( '#<input type="text">#', $res );
-		$nonce = wp_create_nonce( 'hello' );
-		$this->assertRegExp( '#<input type="hidden" id="hello" name="hello" value="'.$nonce.'" />#', $res );
+		$nonce = wp_create_nonce( '_hello' );
+		$this->assertRegExp( '#<input type="hidden" id="_hello" name="_hello" value="'.$nonce.'" />#', $res );
 	}
 
 	function test_meta_box_should_be_added_to_multiple_cpt() {
